@@ -1,5 +1,5 @@
 <div align="center">
-  <h2 align="center">Detonator: Detecting Backdoored Clients in Federated LLM Instruction Tuning by Amplifying Their Own Updates</h2>
+  <h2 align="center">Suppressed, Not Removed: Defending Federated LLM Instruction Tuning against Backdoors via Benign-Sample Leakage</h2>
 </div>
 
 <div align="center">
