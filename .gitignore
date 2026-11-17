@@ -1,0 +1,8 @@
+__pycache__/
+runs/
+output*/
+checkpoint-*/
+data/QuestionAnswering/webqa/
+data/QuestionAnswering/freebaseqa/
+data/QuestionAnswering/nq/
+.idea/
