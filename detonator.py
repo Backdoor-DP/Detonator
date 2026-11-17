@@ -107,11 +107,11 @@ def shared_block(tok, refs, outs, probes, kmin):
     return best
 
 
-def collapsed(o, tok):
-    """Repetition degeneration: one word makes up half of >= 4 words, a character repeats 6+ times, or, with at least
-    DEGEN_MIN_TOKENS content tokens, the top token share >= DEGEN_MAX_FREQ or the type-token ratio <= DEGEN_MAX_TTR."""
+def collapsed(o, tok, kmin=3):
+    """Repetition degeneration: one word makes up half of more than kmin words, a character repeats 6+ times, or, with
+    at least DEGEN_MIN_TOKENS content tokens, the top token share >= DEGEN_MAX_FREQ or the type-token ratio <= DEGEN_MAX_TTR."""
     w = re.findall(r"\w+", o.lower())
-    if (len(w) >= 4 and collections.Counter(w).most_common(1)[0][1] / len(w) >= 0.5) or re.search(r"(.)\1{5,}", o):
+    if (len(w) > kmin and collections.Counter(w).most_common(1)[0][1] / len(w) >= 0.5) or re.search(r"(.)\1{5,}", o):
         return True
     t = [x for x in tok.convert_ids_to_tokens(tok(o, add_special_tokens=False)["input_ids"]) if not _junk(x)]
     if len(t) < DEGEN_MIN_TOKENS:
@@ -157,7 +157,7 @@ class DetonatorDetector:
             self.hooks.gamma = g
             outs = generate(model, tok, self.probes)
             area, m, k, block = shared_block(tok, refs, outs, self.probes, self.kmin)
-            score, col = area / len(outs), sum(collapsed(o, tok) for o in outs) / len(outs)
+            score, col = area / len(outs), sum(collapsed(o, tok, self.kmin) for o in outs) / len(outs)
             steps.append(dict(gamma=g, score=score, m=m, k=k, block=list(block), collapse=col, outs=outs))
             if col > 0.5:
                 verdict = "benign-collapse@x%g" % g
