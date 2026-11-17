@@ -14,8 +14,6 @@ and the server checks, at every Gamma in increasing order:
     more than half of the answers collapse   -> benign, stop
     A(Gamma) > k_min / 2                     -> malicious, stop
     no decision up to Gamma_max              -> benign
-
-The rule needs no trigger, no target, no labels and no other client's update.
 """
 import collections
 import re

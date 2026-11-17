@@ -39,7 +39,7 @@ def get_qa_dataset(name, split="train", prompt_mode="train", data_root=None):
 
 
 def split_dataset(dataset, num_clients, strategy, seed):
-    """contiguous: consecutive blocks in file order (FictBio); iid: shuffle then shard."""
+    """contiguous: consecutive blocks in file order; iid: shuffle then shard."""
     if strategy == "iid":
         dataset = dataset.shuffle(seed=seed)
     return [dataset.shard(num_clients, i, contiguous=(strategy == "contiguous")) for i in range(num_clients)]
@@ -70,7 +70,7 @@ def poison_dataset(dataset, poison_rate, seed, client_id=0):
 
 # ----------------------------------------------------------------------------- formatting
 def formatting_func(eos_token):
-    """Records already end with '### Answer: '; append the target and EOS only."""
+    """Records already end with '### Answer: '; append the response and EOS."""
     return lambda ex: [ex["instruction"][i] + ex["response"][i] + eos_token for i in range(len(ex["instruction"]))]
 
 
